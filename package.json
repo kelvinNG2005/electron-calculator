@@ -18,9 +18,15 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux"
+    "build:linux": "electron-vite build && electron-builder --linux",
+    "publish": "electron-vite build && electron-builder --win --publish always"
   },
   "build": {
+    "publish":{
+      "provider": "github",
+      "owner": "kelvinNG2005",
+      "repo": "electron-calculator"
+    },
     "appId": "com.junwen.electroncalculator",
     "productName": "Electron Calculator",
     "directories": {
@@ -32,7 +38,7 @@
     ],
     "win": {
       "target": [
-        "nsis",  
+        "nsis",
         "portable"
       ],
       "icon": "build/icon.ico"
@@ -42,7 +48,8 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "date-fns": "^4.1.0",
-    "electron-updater": "^6.3.9"
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.8.3"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

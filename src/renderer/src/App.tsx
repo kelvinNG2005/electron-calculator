@@ -1,10 +1,12 @@
 import React from 'react';
 import Calculator from './components/Calculator';
+import UpdateNotification from './components/UpdateNotification'
 
 
 const App: React.FC = () => {
   return (
     <div>
+      <UpdateNotification />
       <header>
         <h1>Calculator</h1>
       </header>

@@ -1,11 +1,21 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { autoUpdater } from 'electron-updater'
+import log from 'electron-log'
+
+// Configure logging for auto-updater
+log.transports.file.level = 'info'
+autoUpdater.logger = log
+
+autoUpdater.autoDownload = false
+
+let mainWindow: BrowserWindow | null = null
 
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -18,7 +28,12 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
+    
+    // Check for updates after window is shown
+    setTimeout(() => {
+      autoUpdater.checkForUpdates()
+    }, 3000)
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -72,3 +87,64 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+autoUpdater.on('checking-for-update', () => {
+  log.info('Checking for updates...')
+  if (mainWindow) {
+    mainWindow.webContents.send('update-message', 'Checking for updates...')
+  }
+})
+
+autoUpdater.on('update-available', (info) => {
+  log.info('Update available:', info)
+  
+  // Ask user if they want to download
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update Available',
+    message: `Version ${info.version} is available. Do you want to download it now?`,
+    buttons: ['Yes', 'No']
+  }).then((result) => {
+    if (result.response === 0) {
+      autoUpdater.downloadUpdate()
+    }
+  })
+})
+
+autoUpdater.on('update-not-available', (info) => {
+  log.info('Update not available:', info)
+  if (mainWindow) {
+    mainWindow.webContents.send('update-message', 'You have the latest version')
+  }
+})
+
+autoUpdater.on('error', (err) => {
+  log.error('Update error:', err)
+})
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`
+  logMessage += ` - Downloaded ${progressObj.percent}%`
+  log.info(logMessage)
+  
+  if (mainWindow) {
+    mainWindow.webContents.send('update-progress', progressObj.percent)
+  }
+})
+
+autoUpdater.on('update-downloaded', (info) => {
+  log.info('Update downloaded:', info)
+  
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update Ready',
+    message: 'Update downloaded. Restart now to install?',
+    buttons: ['Restart', 'Later']
+  }).then((result) => {
+    if (result.response === 0) {
+      setImmediate(() => {
+        autoUpdater.quitAndInstall()
+      })
+    }
+  })
+})
