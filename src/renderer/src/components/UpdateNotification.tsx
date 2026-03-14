@@ -5,10 +5,11 @@ const UpdateNotification: React.FC = () => {
   const [progress, setProgress] = useState<number | null>(null)
 
   useEffect(() => {
+    if (!window.electronAPI) return
+
     // Listen for update messages
     window.electronAPI.onUpdateMessage((msg: string) => {
       setMessage(msg)
-      // Auto-hide success message after 5 seconds
       if (msg === 'You have the latest version') {
         setTimeout(() => setMessage(''), 5000)
       }
@@ -16,7 +17,6 @@ const UpdateNotification: React.FC = () => {
 
     window.electronAPI.onUpdateProgress((p: number) => {
       setProgress(p)
-      // Clear progress when done
       if (p >= 100) {
         setTimeout(() => setProgress(null), 2000)
       }

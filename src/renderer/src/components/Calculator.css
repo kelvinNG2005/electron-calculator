@@ -109,3 +109,49 @@
   justify-content: center;
   color: #7f8c8d;
 }
+
+
+.key-operator {
+  background: #f39c12 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.key-operator:hover {
+  background: #e67e22 !important;
+}
+
+.key-clear {
+  background: #e74c3c !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.key-clear:hover {
+  background: #c0392b !important;
+}
+
+.key-equals {
+  background: #2ecc71 !important;
+  color: white !important;
+  font-weight: bold !important;
+  grid-row: span 2; 
+}
+
+.key-equals:hover {
+  background: #27ae60 !important;
+}
+
+.key-decimal {
+  background: #3498db !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.key-decimal:hover {
+  background: #2980b9 !important;
+}
+
+.key-zero {
+  grid-column: span 2; 
+} 
