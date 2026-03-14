@@ -1,6 +1,6 @@
 {
   "name": "electron-calculator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An Electron calculator Application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "Jun Wen NG 102789136",
