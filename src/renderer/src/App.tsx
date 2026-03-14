@@ -1,7 +1,8 @@
 import React from 'react';
 import Calculator from './components/Calculator';
 import UpdateNotification from './components/UpdateNotification'
-
+// @ts-ignore
+import packageJson from '../../../package.json';
 
 const App: React.FC = () => {
   return (
@@ -12,7 +13,7 @@ const App: React.FC = () => {
       </header>
       <Calculator />
       <footer>
-        <p>Version 1.0.0 | Created for SWE40006</p>
+        <p>Version {packageJson.version} | Created for SWE40006</p>
       </footer>
     </div>
   );
